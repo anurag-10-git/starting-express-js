@@ -1,17 +1,20 @@
 
 const express = require('express');
-
+const bodyParser = require('body-parser') 
+const path = require('path');
 const app = express();
 
-app.use((req, res , next)=>{
-   console.log('In the middleware');
-   next();
+const adminRoute = require('./routes/admin')
+const shopRoute = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({extended:false}))
+
+app.use('/admin',adminRoute);
+
+app.use(shopRoute);
+
+app.use((req,res,next)=>{
+   res.status(404).sendFile(path.join(__dirname,'views','error.html'));
 })
-
-app.use((req, res , next)=>{
-   console.log('In the middleware 2');
-    res.send(`<h1>Helllo from Express!`);
-});
-
 
 app.listen(3000);
